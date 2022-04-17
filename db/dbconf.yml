@@ -1,0 +1,8 @@
+test:
+  driver: postgres
+#  open: host=localhost password=postgres user=macbook dbname=postgres sslmode=disable
+
+development:
+  driver: postgres
+  open: host=localhost port=5440 password=postgres user=docker dbname=docker sslmode=disable
+#  open: host=localhost password=postgres user=macbook dbname=postgres sslmode=disable
