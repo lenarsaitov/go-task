@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"go-task/pkg/bind"
+	"github.com/lenarsaitov/go-task/pkg/bind"
 	"net/http"
 	"strconv"
 )

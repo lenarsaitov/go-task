@@ -1,4 +1,4 @@
-module go-task
+module github.com/lenarsaitov/go-task
 
 go 1.15
 

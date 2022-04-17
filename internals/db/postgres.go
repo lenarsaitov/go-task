@@ -3,9 +3,9 @@ package db
 import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"github.com/lenarsaitov/go-task/internals/config"
+	"github.com/lenarsaitov/go-task/pkg/logging"
 	_ "github.com/lib/pq"
-	"go-task/internals/config"
-	"go-task/pkg/logging"
 )
 
 func NewPostgresDB(cfg *config.Config) *sqlx.DB {

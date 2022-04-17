@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/ilyakaznacheev/cleanenv"
-	"go-task/pkg/logging"
+	"github.com/lenarsaitov/go-task/pkg/logging"
 	"sync"
 )
 

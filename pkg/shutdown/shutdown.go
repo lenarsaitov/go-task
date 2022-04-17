@@ -1,7 +1,7 @@
 package shutdown
 
 import (
-	"go-task/pkg/logging"
+	"github.com/lenarsaitov/go-task/pkg/logging"
 	"io"
 	"os"
 	"os/signal"
