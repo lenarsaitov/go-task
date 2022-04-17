@@ -21,7 +21,7 @@ USER postgres
 RUN /etc/init.d/postgresql start &&\
     psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
     createdb -O docker docker &&\
-    psql -d docker -a -f ./sql/link.sql &&\
+    psql -d docker -a -f ./db/link.sql &&\
     /etc/init.d/postgresql stop
 
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
