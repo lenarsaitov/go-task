@@ -187,12 +187,30 @@ func (s *CardStorage) AddCardItem(ctx context.Context, req *AddCardRequestParams
 }
 
 func (s *CardStorage) UpdateCardItem(ctx context.Context, req *UpdateCardRequestParams) error {
-	_, err := s.getDB().ExecContext(ctx, `UPDATE cards SET balance = $2 WHERE card_id = $1;`,
-		req.CardID, req.Balance)
+	tx, err := s.getDB().BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("Cannot start transaction: %w", err)
+	}
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
 
+	cardRow := tx.QueryRowContext(ctx, `SELECT balance FROM cards WHERE card_id = $1 FOR UPDATE;`, req.CardID)
+	var balance int
+	err = cardRow.Scan(&balance)
 	if err != nil {
 		return err
 	}
+
+	_, err = tx.ExecContext(ctx, `UPDATE cards SET balance = $2 WHERE card_id = $1;`, req.CardID, req.Balance)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -208,6 +226,13 @@ func (s *CardStorage) DeleteCardItem(ctx context.Context, cardID int) error {
 			tx.Commit()
 		}
 	}()
+
+	cardRow := tx.QueryRowContext(ctx, `SELECT balance FROM cards WHERE card_id = $1 FOR UPDATE;`, cardID)
+	var balance int
+	err = cardRow.Scan(&balance)
+	if err != nil {
+		return err
+	}
 
 	res, err := tx.ExecContext(ctx, "DELETE FROM cards WHERE card_id=$1", cardID)
 	if err == nil {

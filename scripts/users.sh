@@ -22,11 +22,17 @@ curl "localhost:10000/users/1"
 echo "\n Get info about non-existent user"
 curl "localhost:10000/users/101"
 
-echo "\n Edit info about 2 users to Some Some Somisch"
+echo "\n Edit info about 2 user to Some Some Somisch"
 curl --request PUT "localhost:10000/users/2" --data '{"username" : "Some Some Somisch"}'
 
-echo "\n Delete info about 1 users"
+echo "\n Edit info about non-existent user to Some Some Somisch"
+curl --request PUT "localhost:10000/users/1000" --data '{"username" : "Some Some Somisch"}'
+
+echo "\n Delete info about 1 user"
 curl --request DELETE "localhost:10000/users/1"
+
+echo "\n Delete info non-existent 1 user"
+curl --request DELETE "localhost:10000/users/100"
 
 echo "\n Get list of users"
 curl "localhost:10000/users"

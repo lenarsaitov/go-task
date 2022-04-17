@@ -183,11 +183,30 @@ func (s *UserStorage) AddUserItem(ctx context.Context, req *AddUserRequestParams
 }
 
 func (s *UserStorage) UpdateUserItem(ctx context.Context, req *UpdateUserRequestParams) error {
-	_, err := s.getDB().ExecContext(ctx, `UPDATE users SET user_full_name = $2 WHERE user_id = $1;`, req.UserID, req.UserName)
+	tx, err := s.getDB().BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("Cannot start transaction: %w", err)
+	}
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
 
+	cardRow := tx.QueryRowContext(ctx, `SELECT user_full_name FROM users WHERE user_id = $1 FOR UPDATE;`, req.UserID)
+	var UserName string
+	err = cardRow.Scan(&UserName)
 	if err != nil {
 		return err
 	}
+
+	_, err = tx.ExecContext(ctx, `UPDATE users SET user_full_name = $2 WHERE user_id = $1;`, req.UserID, req.UserName)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -203,6 +222,13 @@ func (s *UserStorage) DeleteUserItem(ctx context.Context, userID int) error {
 			tx.Commit()
 		}
 	}()
+
+	cardRow := tx.QueryRowContext(ctx, `SELECT user_full_name FROM users WHERE user_id = $1 FOR UPDATE;`, userID)
+	var UserName string
+	err = cardRow.Scan(&UserName)
+	if err != nil {
+		return err
+	}
 
 	res, err := tx.ExecContext(ctx, "DELETE FROM users WHERE user_id=$1", userID)
 	if err == nil {
