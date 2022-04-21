@@ -26,8 +26,8 @@ DROP TABLE IF EXISTS account_records;
 
 CREATE TABLE account_records (
     id           		BIGSERIAL PRIMARY KEY,
-    account_id 			BIGINT,
-    operation_id 		BIGINT DEFAULT 0,
+    account_id                  BIGINT NOT NULL,
+    operation_id 		BIGINT DEFAULT 0 NOT NULL,
     balance_delta 		MONEY,
     balance_after 		MONEY,
     balance_updated_at          TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
