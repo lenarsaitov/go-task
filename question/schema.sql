@@ -5,7 +5,7 @@ DROP INDEX IF EXISTS delta_on_date_idx;
 CREATE TABLE account_records (
              id           		    BIGSERIAL PRIMARY KEY,
              account_id 		    BIGINT,
-             operation_id 		    BIGINT DEFAULT NULL,
+             operation_id 		    BIGINT DEFAULT 0,
              balance_delta 		    MONEY,
              balance_after 		    MONEY,
              balance_updated_at     TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
@@ -20,7 +20,7 @@ FROM generate_series(1, 1000000) AS i;
 
 EXPLAIN (ANALYZE) SELECT balance_after FROM account_records WHERE operation_id = 340000;
 
-EXPLAIN (ANALYZE) SELECT balance_delta FROM account_records WHERE account_id = 895001 AND balance_updated_at = '2022-04-20';
+EXPLAIN (ANALYZE) SELECT balance_delta FROM account_records WHERE account_id = 895001 AND balance_updated_at >= to_timestamp('2022-04-20','YYYY-MM-DD') AND balance_updated_at < to_timestamp('2022-04-21','YYYY-MM-DD');
 
 EXPLAIN (ANALYZE) INSERT INTO account_records (account_id, operation_id, balance_delta, balance_after)
 VALUES (4, 1, 4000.22223, 5000.22223);
