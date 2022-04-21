@@ -5,7 +5,7 @@ DROP INDEX IF EXISTS delta_on_date_idx;
 CREATE TABLE account_records (
              id           		    BIGSERIAL PRIMARY KEY,
              account_id 		    BIGINT NOT NULL,
-             operation_id 		    BIGINT DEFAULT 0 NOT NULL,
+             operation_id 		    BIGINT NOT NULL DEFAULT 0,
              balance_delta 		    MONEY,
              balance_after 		    MONEY,
              balance_updated_at     TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
